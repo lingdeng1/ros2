@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>小海龟画圆 - 模拟器的 ROS 文档</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u5c0f\u6d77\u9f9f\u753b\u5706";
+        var mkdocs_page_input_path = "ROS\u5c0f\u6d77\u9f9f\u753b\u5706\u64cd\u4f5c\u6587\u6863.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> 模拟器的 ROS 文档
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">首页</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../ubuntu20.04/">Ubuntu20.04安装ROS</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../set_up_and_connect_to_carla/">地面载具</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../air/setup_and_connect/">空域载具</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../water/HoloOcean/">水域载具</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../ubuntu2004-local-llm-deploy/">自装ubuntu20.04本地大模型部署教程</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">ROS每章节运行代码</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="" href="../Run_code_for_ the_ chapter/turtle_square.md">小海龟画正方形</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">小海龟画圆</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#_1">一、实验目的</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_2">二、实验环境</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_3">三、实验原理</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#31">3.1 话题通信机制</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#32">3.2 画圆原理</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_4">四、操作步骤</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#1-ros-roscore-1">步骤 1：启动 ROS 主节点 roscore（终端 1）</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#2-2">步骤 2：启动小海龟仿真节点（终端 2）</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#3-3">步骤 3：发布速度指令控制小海龟画圆（终端 3）</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#4">步骤 4：停止运动</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_5">五、实验结果</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_6">六、拓展：调整圆的大小</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_7">七、常见问题</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">模拟器的 ROS 文档</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">ROS每章节运行代码</li>
+      <li class="breadcrumb-item active">小海龟画圆</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/template/edit/master/docs/ROS小海龟画圆操作文档.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <div><h1 id="ros">ROS 小海龟画圆操作文档</h1>
+<h2 id="_1">一、实验目的</h2>
+<ol>
+<li>熟悉 ROS 的基本操作，掌握 <code>roscore</code>、<code>rosrun</code>、<code>rostopic</code> 等常用命令；</li>
+<li>理解 ROS 话题（Topic）的发布与订阅机制；</li>
+<li>通过向 <code>/turtle1/cmd_vel</code> 话题发布速度控制消息，控制小海龟（turtlesim）画出一个圆形轨迹。</li>
+</ol>
+<h2 id="_2">二、实验环境</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>配置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>操作系统</td>
+<td>Ubuntu（Linux）</td>
+</tr>
+<tr>
+<td>ROS 版本</td>
+<td>ROS Noetic（ros_comm 1.17.4）</td>
+</tr>
+<tr>
+<td>仿真工具</td>
+<td>turtlesim 小海龟仿真器</td>
+</tr>
+<tr>
+<td>主机名</td>
+<td>ubuntu（ROS_MASTER_URI=http://ubuntu:11311/）</td>
+</tr>
+<tr>
+<td>终端工具</td>
+<td>系统终端（需打开 3 个终端窗口）</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_3">三、实验原理</h2>
+<h3 id="31">3.1 话题通信机制</h3>
+<p><code>turtlesim_node</code> 节点启动后会订阅 <code>/turtle1/cmd_vel</code> 话题，该话题的消息类型为 <code>geometry_msgs/Twist</code>，用于接收小海龟的运动速度指令。我们通过 <code>rostopic pub</code> 命令周期性地向该话题发布速度消息，即可控制小海龟运动。</p>
+<p><code>geometry_msgs/Twist</code> 消息包含线速度和角速度两部分：</p>
+<pre class="highlight"><code class="language-yaml">linear:    # 线速度 (m/s)
+  x: 0.0
+  y: 0.0
+  z: 0.0
+angular:   # 角速度 (rad/s)
+  x: 0.0
+  y: 0.0
+  z: 0.0</code></pre>
+<p>小海龟在平面内运动，只需使用 <code>linear.x</code>（前进线速度 v）和 <code>angular.z</code>（绕 z 轴旋转角速度 ω），其余分量保持为 0。</p>
+<h3 id="32">3.2 画圆原理</h3>
+<p>当小海龟同时具有恒定的前进线速度 v 和恒定的转向角速度 ω 时，其运动轨迹为一个圆。圆周运动满足：</p>
+<p>
+<script type="math/tex; mode=display">
+v = \omega r \quad\Longrightarrow\quad r = \frac{v}{\omega}
+</script>
+</p>
+<p>其中：</p>
+<ul>
+<li>v 为线速度 <code>linear.x</code>，本实验取 <strong>2.0 m/s</strong>；</li>
+<li>ω 为角速度 <code>angular.z</code>，本实验取 <strong>1.8 rad/s</strong>；</li>
+<li>r 为所画圆的半径。</li>
+</ul>
+<p>因此本实验画出的圆半径为：</p>
+<p>
+<script type="math/tex; mode=display">
+r = \frac{2.0}{1.8} \approx 1.11 \ \text{m}
+</script>
+</p>
+<p>走完一整圈所需时间（周期）为：</p>
+<p>
+<script type="math/tex; mode=display">
+T = \frac{2\pi}{\omega} = \frac{2\pi}{1.8} \approx 3.49 \ \text{s}
+</script>
+</p>
+<blockquote>
+<p>说明：线速度决定圆的大小和运动快慢，角速度决定转向快慢；两者比值恒定时轨迹为圆，改变 v 或 ω 的数值即可改变圆的半径。</p>
+</blockquote>
+<h2 id="_4">四、操作步骤</h2>
+<h3 id="1-ros-roscore-1">步骤 1：启动 ROS 主节点 roscore（终端 1）</h3>
+<p>打开第一个终端，输入：</p>
+<pre class="highlight"><code class="language-bash">roscore</code></pre>
+<p>正常启动后终端会显示如下关键信息，表示 ROS Master 已在 11311 端口运行：</p>
+<pre class="highlight"><code class="language-text">started roslaunch server http://ubuntu:46293/
+ros_comm version 1.17.4
+
+SUMMARY
+========
+
+PARAMETERS
+ * /rosdistro: noetic
+ * /rosversion: 1.17.4
+
+NODES
+
+auto-starting new master
+process[master]: started with pid [2660]
+ROS_MASTER_URI=http://ubuntu:11311/
+...
+started core service [/rosout]</code></pre>
+<blockquote>
+<p>注意：该终端在实验过程中需保持运行，不能关闭。</p>
+</blockquote>
+<h3 id="2-2">步骤 2：启动小海龟仿真节点（终端 2）</h3>
+<p>新开第二个终端，输入：</p>
+<pre class="highlight"><code class="language-bash">rosrun turtlesim turtlesim_node</code></pre>
+<p>执行后会弹出蓝色背景的 <strong>TurtleSim</strong> 仿真窗口，终端显示小海龟的初始位姿（初始位置约为 x=5.544445, y=5.544445，朝向 theta=0）：</p>
+<pre class="highlight"><code class="language-text">[INFO]: Starting turtlesim with node name /turtlesim
+[INFO]: Spawning turtle [turtle1] at x=[5.544445], y=[5.544445], theta=[0.000000]</code></pre>
+<h3 id="3-3">步骤 3：发布速度指令控制小海龟画圆（终端 3）</h3>
+<p>再新开第三个终端，输入以下命令，以 1Hz 的频率持续向 <code>/turtle1/cmd_vel</code> 话题发布速度消息：</p>
+<pre class="highlight"><code class="language-bash">rostopic pub /turtle1/cmd_vel geometry_msgs/Twist -r 1 -- 'linear: {x: 2.0, y: 0, z: 0}, angular: {x: 0, y: 0, z: 1.8}'</code></pre>
+<p>命令参数说明：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pub</code></td>
+<td>表示发布话题消息</td>
+</tr>
+<tr>
+<td><code>/turtle1/cmd_vel</code></td>
+<td>小海龟速度控制话题名</td>
+</tr>
+<tr>
+<td><code>geometry_msgs/Twist</code></td>
+<td>速度消息类型</td>
+</tr>
+<tr>
+<td><code>-r 1</code></td>
+<td>以 1Hz 的频率（每秒 1 次）循环发布</td>
+</tr>
+<tr>
+<td><code>--</code></td>
+<td>其后为 YAML 格式的消息内容</td>
+</tr>
+<tr>
+<td><code>linear.x: 2.0</code></td>
+<td>前进线速度 2.0 m/s</td>
+</tr>
+<tr>
+<td><code>angular.z: 1.8</code></td>
+<td>逆时针角速度 1.8 rad/s</td>
+</tr>
+</tbody>
+</table>
+<p>命令执行后，即可在 TurtleSim 窗口中看到小海龟一边前进一边匀速转向，约 3.5 秒画出一个圆，并持续沿圆形轨迹运动。</p>
+<h3 id="4">步骤 4：停止运动</h3>
+<p>在终端 3 中按 <code>Ctrl + C</code> 停止发布速度消息，小海龟随即停止运动；如需结束实验，依次在终端 2、终端 1 中按 <code>Ctrl + C</code> 关闭仿真节点和 roscore 即可。</p>
+<h2 id="_5">五、实验结果</h2>
+<p>小海龟在 TurtleSim 窗口中以初始位置为参考，画出了一个半径约为 1.11m 的光滑圆形轨迹，实验现象与理论分析一致，验证了以下结论：</p>
+<ol>
+<li>通过 <code>rostopic pub</code> 可以向指定话题发布消息，实现对节点的控制；</li>
+<li>当线速度与角速度均为恒定值且不为零时，小海龟做匀速圆周运动；</li>
+<li>圆的半径由线速度与角速度的比值决定，即 r = v / ω。</li>
+</ol>
+<p>（此处插入实验运行截图）</p>
+<p><img alt="ROS小海龟画圆运行效果" src="../img/ros%E5%B0%8F%E6%B5%B7%E9%BE%9F%E7%94%BB%E5%9C%86.png"></p>
+<h2 id="_6">六、拓展：调整圆的大小</h2>
+<p>修改 <code>linear.x</code> 与 <code>angular.z</code> 的比值即可改变圆的半径，例如：</p>
+<pre class="highlight"><code class="language-bash"># 半径更小的圆：r = 1.0 / 2.0 = 0.5 m
+rostopic pub /turtle1/cmd_vel geometry_msgs/Twist -r 1 -- 'linear: {x: 1.0, y: 0, z: 0}, angular: {x: 0, y: 0, z: 2.0}'
+
+# 半径更大的圆：r = 3.0 / 1.0 = 3.0 m
+rostopic pub /turtle1/cmd_vel geometry_msgs/Twist -r 1 -- 'linear: {x: 3.0, y: 0, z: 0}, angular: {x: 0, y: 0, z: 1.0}'</code></pre>
+<p>将 <code>angular.z</code> 改为负值（如 -1.8），小海龟将沿<strong>顺时针</strong>方向画圆。</p>
+<h2 id="_7">七、常见问题</h2>
+<ol>
+<li><strong>执行 <code>rosrun</code> 提示找不到 turtlesim 包</strong>：先执行 <code>sudo apt install ros-noetic-turtlesim</code> 安装，并确认已执行 <code>source /opt/ros/noetic/setup.bash</code>。</li>
+<li><strong>小海龟不动</strong>：检查终端 1 的 <code>roscore</code> 是否仍在运行，话题名和消息类型是否拼写正确。</li>
+<li><strong>轨迹不是闭合的圆</strong>：确认发布时使用了 <code>-r</code> 参数持续发布（而非只发布一次），并保持线速度、角速度恒定。</li>
+<li><strong>海龟走出窗口</strong>：说明圆半径过大，适当减小 <code>linear.x</code> 或增大 <code>angular.z</code> 即可。</li>
+</ol></div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../ubuntu2004-local-llm-deploy/" class="btn btn-neutral float-left" title="自装ubuntu20.04本地大模型部署教程"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2026</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/template" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../ubuntu2004-local-llm-deploy/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../js/umlconvert.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

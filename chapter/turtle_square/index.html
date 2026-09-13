@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>小海龟画正方形实验 - 模拟器的 ROS 文档</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u5c0f\u6d77\u9f9f\u753b\u6b63\u65b9\u5f62\u5b9e\u9a8c";
+        var mkdocs_page_input_path = "chapter\\turtle_square.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> 模拟器的 ROS 文档
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">首页</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../ubuntu20.04/">Ubuntu20.04安装ROS</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../set_up_and_connect_to_carla/">地面载具</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../air/setup_and_connect/">空域载具</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../water/HoloOcean/">水域载具</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../ubuntu2004-local-llm-deploy/">自装ubuntu20.04本地大模型部署教程</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">ROS每章节运行代码</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="" href="../../Run_code_for_ the_ chapter/turtle_square.md">小海龟画正方形</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../ROS%E5%B0%8F%E6%B5%B7%E9%BE%9F%E7%94%BB%E5%9C%86%E6%93%8D%E4%BD%9C%E6%96%87%E6%A1%A3/">小海龟画圆</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">模拟器的 ROS 文档</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">小海龟画正方形实验</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/template/edit/master/docs/chapter/turtle_square.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <div><h1 id="_1">小海龟画正方形实验</h1>
+<h2 id="_2">一、实验目的与环境说明</h2>
+<h3 id="11">1.1 实验目的</h3>
+<ol>
+<li>掌握 ROS 话题通信机制：节点作为<strong>发布者</strong>向 <code>/turtle1/cmd_vel</code> 话题发布 <code>geometry_msgs/Twist</code> 速度消息；</li>
+<li>理解<strong>时间开环控制</strong>的原理：不依赖传感器反馈，利用 $t = s / v$ 与 $t = \theta / \omega$ 计算运动时长；</li>
+<li>通过 turtlesim 仿真器，让小海龟自主绘制一个边长 2 m 的正方形并回到起点。</li>
+</ol>
+<h3 id="12">1.2 实验环境</h3>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>配置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>操作系统</td>
+<td>Ubuntu 20.04（VMware 虚拟机）</td>
+</tr>
+<tr>
+<td>ROS 发行版</td>
+<td>ROS Noetic</td>
+</tr>
+<tr>
+<td>仿真器</td>
+<td>turtlesim</td>
+</tr>
+<tr>
+<td>编程语言</td>
+<td>Python 3（rospy）</td>
+</tr>
+<tr>
+<td>功能包</td>
+<td>turtle_motion</td>
+</tr>
+</tbody>
+</table>
+<p>功能包目录结构如下：</p>
+<pre class="highlight"><code class="language-text">turtle_motion/
+├── package.xml        # 包清单，声明依赖 rospy 和 geometry_msgs
+├── CMakeLists.txt     # 编译配置，把脚本安装到 bin 目录
+└── scripts/
+    └── square_draw.py # 主程序：控制小海龟画正方形的节点</code></pre>
+<h2 id="_3">二、核心控制原理与算法解析</h2>
+<h3 id="21">2.1 话题通信机制</h3>
+<p>turtlesim 仿真器启动后，小海龟会一直订阅名为 <code>/turtle1/cmd_vel</code> 的话题。我们编写的节点 <code>turtle_square_node</code> 作为发布者，只要向该话题发布一条 <code>Twist</code> 消息，小海龟就会按照消息中指定的速度运动。</p>
+<p><code>Twist</code> 消息中本实验只用到两个分量：</p>
+<ul>
+<li><code>linear.x</code>：线速度，控制海龟前进的快慢（单位 m/s）；</li>
+<li><code>angular.z</code>：角速度，控制海龟转头的快慢（单位 rad/s），取正值绕 z 轴逆时针旋转，即<strong>左转</strong>。</li>
+</ul>
+<h3 id="22">2.2 时间开环控制</h3>
+<p>本实验不订阅海龟的位姿话题（如 <code>/turtle1/pose</code>），属于<strong>开环控制</strong>：根据目标位移直接计算需要运动多长时间，时间一到就发零速度停机。</p>
+<ul>
+<li>直行一条边：位移 $s$、线速度 $v$，则运动时间</li>
+</ul>
+<p>
+<script type="math/tex; mode=display">t = \frac{s}{v}</script>
+</p>
+<p>例如边长 $s = 2\ \text{m}$、速度 $v = 1\ \text{m/s}$，走 2 秒即可停下。
+- 左转 90°：转角 $\theta = \pi / 2$、角速度 $\omega$，则运动时间</p>
+<p>
+<script type="math/tex; mode=display">t = \frac{\theta}{\omega}</script>
+</p>
+<p>例如角速度 $\omega = 1\ \text{rad/s}$，转 1.57 秒即可停下。</p>
+<h3 id="23">2.3 防惯性滑动的停机处理</h3>
+<p>海龟具有惯性，速度指令撤销后仍会滑行一段距离，导致边长不准、转角不是直角。因此：</p>
+<ol>
+<li>每次动作结束后，立即发布一条<strong>全零速度</strong>消息 <code>Twist()</code>，让海龟停下；</li>
+<li>两个动作之间再等待 0.5 秒，把残余惯性完全消掉，再进入下一个动作。</li>
+</ol>
+<h3 id="24">2.4 算法流程</h3>
+<ol>
+<li>初始化节点 <code>turtle_square_node</code>，创建指向 <code>/turtle1/cmd_vel</code> 的发布者；</li>
+<li>等待 1 秒，保证发布者与 turtlesim 订阅端建立连接，避免第一条消息丢失；</li>
+<li>循环 4 次，每轮执行：直行一条边 → 停 0.5 秒 → 左转 90° → 停 0.5 秒；</li>
+<li>循环内外均通过 <code>rospy.is_shutdown()</code> 和 <code>try/except/finally</code> 做保护，节点被 <code>Ctrl+C</code> 中断时海龟也能安全停下。</li>
+</ol>
+<h2 id="_4">三、完整源码展示</h2>
+<h3 id="31-scriptssquare_drawpy">3.1 主程序 <code>scripts/square_draw.py</code></h3>
+<pre class="highlight"><code class="language-python">#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+# 这个节点用来控制小海龟画一个正方形
+# 思路：直走一段距离 -&gt; 停一下 -&gt; 左转90度 -&gt; 再直走，循环4次就是正方形了
+# 节点名叫 turtle_square_node，速度指令都发到 /turtle1/cmd_vel 话题上
+
+import math
+
+import rospy
+from geometry_msgs.msg import Twist
+
+# 全局的发布者，下面几个函数都要用它来发消息
+pub = None
+
+
+def publish_stop():
+    # 发一个全0的速度，让海龟停下来，不然它会因为惯性再往前滑一段
+    stop_msg = Twist()
+    pub.publish(stop_msg)
+
+
+def move_forward(speed, distance):
+    # 直走函数：speed 是速度（m/s），distance 是要走的距离（m）
+    move_msg = Twist()
+    move_msg.linear.x = speed      # 只设置x方向的线速度
+    pub.publish(move_msg)
+
+    # 这里是时间开环控制：不用管海龟实际走了多远，
+    # 根据 t = s / v 算出时间，时间到了就停下来
+    t = distance / speed
+    rospy.sleep(t)
+
+    # 时间到了，发0速度停下来
+    publish_stop()
+    rospy.loginfo("直走完成，走了 %.2f 米，用了 %.2f 秒", distance, t)
+
+
+def rotate_90_degrees(angular_speed):
+    # 左转90度的函数：angular_speed 是角速度（rad/s）
+    rotate_msg = Twist()
+    rotate_msg.angular.z = angular_speed   # 绕z轴正方向转，也就是逆时针
+    pub.publish(rotate_msg)
+
+    # 90度换成弧度就是 math.pi / 2，时间 = 角度 / 角速度
+    t = (math.pi / 2) / angular_speed
+    rospy.sleep(t)
+
+    # 时间到了，发0速度停下来
+    publish_stop()
+    rospy.loginfo("左转90度完成，用了 %.2f 秒", t)
+
+
+if __name__ == '__main__':
+    # 初始化节点
+    rospy.init_node('turtle_square_node')
+
+    # 创建发布者，往 /turtle1/cmd_vel 话题发 Twist 类型的消息
+    pub = rospy.Publisher('/turtle1/cmd_vel', Twist, queue_size=10)
+
+    # 先等1秒，让发布者和turtlesim连接好，不然第一条消息可能会收不到
+    rospy.sleep(1.0)
+
+    # 运动参数，可以自己改着玩
+    speed = 1.0           # 线速度 1 m/s
+    distance = 2.0        # 正方形边长 2 m
+    angular_speed = 1.0   # 角速度 1 rad/s
+
+    try:
+        rospy.loginfo("开始画正方形，边长是 %.2f 米", distance)
+
+        # 正方形有4条边，所以循环4次
+        for i in range(4):
+            # 检查一下节点有没有被关掉，关了就退出循环
+            if rospy.is_shutdown():
+                break
+
+            # 第1步：直走一条边
+            rospy.loginfo("正在画第 %d 条边", i + 1)
+            move_forward(speed, distance)
+
+            # 第2步：停0.5秒，速度置0，把惯性消掉
+            publish_stop()
+            rospy.sleep(0.5)
+
+            # 第3步：逆时针转90度
+            rospy.loginfo("正在转第 %d 个角", i + 1)
+            rotate_90_degrees(angular_speed)
+
+            # 第4步：再停0.5秒，速度置0，把惯性消掉
+            publish_stop()
+            rospy.sleep(0.5)
+
+        rospy.loginfo("正方形画完啦！")
+    except rospy.ROSInterruptException:
+        # 按Ctrl+C或者节点被关闭的时候会走到这里
+        rospy.loginfo("节点被中断，让海龟停下来")
+    finally:
+        # 不管正常画完还是中间出错，最后都再发一次0速度，保险一点
+        if pub is not None:
+            publish_stop()</code></pre>
+<h3 id="32-cmakeliststxt">3.2 构建文件 <code>CMakeLists.txt</code></h3>
+<pre class="highlight"><code class="language-cmake">cmake_minimum_required(VERSION 3.0.2)
+project(turtle_motion)
+
+## 查找catkin和我们用到的依赖（rospy和geometry_msgs）
+find_package(catkin REQUIRED COMPONENTS
+  rospy
+  geometry_msgs
+)
+
+## 声明这个catkin包，因为包里面只有python代码，所以不用导出库
+catkin_package()
+
+## 把square_draw.py装到bin目录下，装好之后就可以用
+## rosrun turtle_motion square_draw.py 直接运行了
+catkin_install_python(PROGRAMS
+  scripts/square_draw.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)</code></pre>
+<h3 id="33-packagexml">3.3 包清单 <code>package.xml</code></h3>
+<pre class="highlight"><code class="language-xml">&lt;?xml version="1.0"?&gt;
+&lt;!-- turtle_motion 功能包清单：小海龟自主绘制正方形轨迹 --&gt;
+&lt;package format="2"&gt;
+  &lt;name&gt;turtle_motion&lt;/name&gt;
+  &lt;version&gt;0.0.0&lt;/version&gt;
+  &lt;description&gt;turtle_motion: 小海龟自主绘制正方形轨迹功能包&lt;/description&gt;
+  &lt;maintainer email="tianyutu981@todo.todo"&gt;tianyutu981&lt;/maintainer&gt;
+  &lt;license&gt;TODO&lt;/license&gt;
+
+  &lt;!-- 构建工具依赖 --&gt;
+  &lt;buildtool_depend&gt;catkin&lt;/buildtool_depend&gt;
+
+  &lt;!-- 构建依赖 --&gt;
+  &lt;build_depend&gt;rospy&lt;/build_depend&gt;
+  &lt;build_depend&gt;geometry_msgs&lt;/build_depend&gt;
+
+  &lt;!-- 运行依赖 --&gt;
+  &lt;exec_depend&gt;rospy&lt;/exec_depend&gt;
+  &lt;exec_depend&gt;geometry_msgs&lt;/exec_depend&gt;
+
+  &lt;export&gt;
+  &lt;/export&gt;
+&lt;/package&gt;</code></pre>
+<h2 id="_5">四、运行与验证</h2>
+<h3 id="41">4.1 编译功能包</h3>
+<p>把 <code>turtle_motion</code> 放到工作空间 <code>src</code> 目录下（不要放在共享目录里编译），然后：</p>
+<pre class="highlight"><code class="language-bash">cd ~/catkin_ws              # 进入工作空间根目录
+catkin_make                 # 编译
+source devel/setup.bash     # 刷新环境</code></pre>
+<h3 id="42">4.2 启动节点</h3>
+<p>一共需要三个终端：</p>
+<pre class="highlight"><code class="language-bash"># 终端1：启动 ROS 主节点
+roscore
+
+# 终端2：启动小海龟仿真器
+rosrun turtlesim turtlesim_node
+
+# 终端3：运行画正方形节点
+rosrun turtle_motion square_draw.py</code></pre>
+<h3 id="43">4.3 话题订阅/发布验证</h3>
+<p>在节点运行的同时，另开终端依次执行：</p>
+<pre class="highlight"><code class="language-bash">rostopic list                        # 查看所有话题，确认 /turtle1/cmd_vel 存在
+rostopic info /turtle1/cmd_vel       # 查看话题类型，应为 geometry_msgs/Twist
+rostopic echo /turtle1/cmd_vel       # 实时打印发布者发出的速度消息
+rosnode list                         # 确认 turtle_square_node 已注册</code></pre>
+<p>节点运行时 <code>rostopic echo</code> 的输出节选如下：直行阶段只有 <code>linear.x</code> 为 1.0，转弯阶段只有 <code>angular.z</code> 为 1.0，动作之间为全零停机消息。</p>
+<pre class="highlight"><code class="language-text">linear:
+  x: 1.0
+  y: 0.0
+  z: 0.0
+angular:
+  x: 0.0
+  y: 0.0
+  z: 1.0
+---</code></pre>
+<h3 id="44">4.4 预期结果</h3>
+<p>节点运行后，在 turtlesim 窗口中可以看到小海龟沿直线行走 2 m、左转 90°，重复 4 次后回到起点，绘制出一个边长 2 m 的正方形，终端同步打印 <code>正在画第 N 条边</code>、<code>正在转第 N 个角</code> 等日志，最后输出 <code>正方形画完啦！</code>。</p>
+<h2 id="_6">五、总结</h2>
+<p>本实验通过编写发布者节点向 <code>/turtle1/cmd_vel</code> 话题发布 <code>Twist</code> 消息，实现了小海龟自主绘制正方形的任务。实验中掌握了 ROS 话题通信的基本用法，理解了时间开环控制的原理及其局限（海龟惯性带来的误差通过停机等待来抑制），并练习了 <code>rostopic</code> 等命令行工具的验证方法。后续可以把控制律替换为基于 <code>/turtle1/pose</code> 位姿反馈的闭环控制，使轨迹更加精确。</p></div>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2026</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/template" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../js/umlconvert.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
